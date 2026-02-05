@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Pixel Lexis - Admin Zone</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Giao diện riêng cho Admin */
+        .admin-container { max-width: 800px; margin: 0 auto; padding: 20px; border-color: #4caf50; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; color: #ffcc00; margin-bottom: 5px; font-size: 24px; }
+        select, input { 
+            width: 100%; padding: 10px; font-family: 'VT323'; font-size: 22px; 
+            background: #333; color: #fff; border: 2px solid #fff; box-sizing: border-box;
+        }
+        .question-list { border: 2px dashed #555; padding: 15px; margin-bottom: 20px; background: #222; min-height: 50px;}
+        .q-item { display: flex; gap: 10px; margin-bottom: 10px; }
+        .game-header h1 { color: #4caf50; }
+        
+        /* Style thông báo lỗi */
+        #error-log { color: #ff5555; background: #220000; padding: 10px; display: none; border: 1px solid red; font-family: monospace; font-size: 16px; margin-bottom: 20px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <div class="game-container admin-container">
+        <header class="game-header">
+            <h1>ADMIN CONTROL</h1>
+            <p>Khu vực dành riêng cho Giáo Viên</p>
+        </header>
+
+        <div id="error-log"></div>
+
+        <div class="form-group">
+            <label>1. Chọn Vùng Đất (World):</label>
+            <select id="world-select">
+                <option value="map_rung">🌲 Rừng Khởi Đầu</option>
+                <option value="map_city">🏙️ Thành Phố Code</option>
+                <option value="map_dungeon">💀 Hầm Ngục Tối</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>2. Thông tin Level:</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="level-id" placeholder="ID (Ví dụ: 1)" style="width: 100px;">
+                <input type="text" id="level-name" placeholder="Tên màn (Ví dụ: Bìa Rừng)">
+            </div>
+            <div style="margin-top: 10px;">
+                <input type="checkbox" id="is-boss" style="width: 20px; height: 20px;"> 
+                <span style="font-size: 20px; color: #d32f2f; vertical-align: bottom;">Đây là màn BOSS?</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>3. Danh sách từ vựng:</label>
+            <div id="q-container" class="question-list">
+                </div>
+            <button class="pixel-btn secondary small" id="btn-add-line">+ Thêm từ mới</button>
+        </div>
+
+        <button class="pixel-btn" id="btn-save" style="background-color: #4caf50;">LƯU LÊN CLOUD ☁️</button>
+        <p id="status-msg" style="margin-top: 15px; font-size: 20px;"></p>
+        
+        <br>
+        <button class="pixel-btn secondary" id="btn-logout" style="background-color: #d32f2f;">⬅ ĐĂNG XUẤT</button>
+    </div>
+
+    <script>
+        function logError(msg) {
+            const errDiv = document.getElementById('error-log');
+            errDiv.style.display = 'block';
+            errDiv.innerText += "LỖI: " + msg + "\n";
+        }
+
+        function addQuestionLine() {
+            const div = document.createElement("div");
+            div.className = "q-item";
+            div.innerHTML = `
+                <input type="text" placeholder="Tiếng Anh (WORD)" class="inp-word">
+                <input type="text" placeholder="Tiếng Việt (MEANING)" class="inp-meaning">
+            `;
+            document.getElementById("q-container").appendChild(div);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                addQuestionLine(); addQuestionLine(); addQuestionLine();
+                document.getElementById("btn-add-line").addEventListener("click", addQuestionLine);
+            } catch (e) {
+                logError(e.message);
+            }
+        });
+    </script>
+
+    <script type="module">
+        // Import đầy đủ các công cụ cần thiết: DB và Auth
+        import { db, doc, setDoc, auth, signOut, onAuthStateChanged } from './js/firebase-init.js';
+
+        // 1. NGƯỜI GÁC CỔNG (Security Check)
+        // Kiểm tra ngay khi vào trang: Có phải giáo viên không?
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("Chào mừng Admin:", user.email);
+            } else {
+                // Nếu chưa đăng nhập -> Đẩy về trang Login ngay lập tức
+                alert("Bạn không có quyền truy cập! Vui lòng đăng nhập.");
+                window.location.href = "login.html";
+            }
+        });
+
+        // 2. CHỨC NĂNG ĐĂNG XUẤT
+        document.getElementById("btn-logout").addEventListener("click", () => {
+            if(confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
+                signOut(auth).then(() => {
+                    window.location.href = "login.html";
+                }).catch((error) => {
+                    alert("Lỗi khi đăng xuất: " + error.message);
+                });
+            }
+        });
+
+        // 3. CHỨC NĂNG LƯU DỮ LIỆU (Save Logic)
+        document.getElementById("btn-save").addEventListener("click", async () => {
+            const btn = document.getElementById("btn-save");
+            const msg = document.getElementById("status-msg");
+            
+            btn.disabled = true;
+            btn.innerText = "ĐANG ĐẨY DỮ LIỆU...";
+            msg.innerText = "";
+
+            try {
+                if (!db) throw new Error("Mất kết nối Firebase!");
+
+                const worldId = document.getElementById("world-select").value; 
+                const levelId = document.getElementById("level-id").value;     
+                const levelName = document.getElementById("level-name").value; 
+                const isBoss = document.getElementById("is-boss").checked;
+
+                const questions = [];
+                document.querySelectorAll(".q-item").forEach(item => {
+                    const w = item.querySelector(".inp-word").value.trim();
+                    const m = item.querySelector(".inp-meaning").value.trim();
+                    if(w && m) questions.push({ word: w.toUpperCase(), meaning: m });
+                });
+
+                if(!levelId || !levelName || questions.length === 0) {
+                    throw new Error("Vui lòng nhập ID, Tên màn và ít nhất 1 từ vựng!");
+                }
+
+                const docData = {
+                    id: parseInt(levelId),
+                    name: levelName,
+                    isBoss: isBoss,
+                    locked: parseInt(levelId) !== 1, 
+                    completed: false,
+                    questions: questions
+                };
+
+                // Lưu vào Firestore
+                await setDoc(doc(db, "worlds", worldId, "levels", levelId), docData);
+
+                msg.innerText = "✅ THÀNH CÔNG! Dữ liệu đã lên mây.";
+                msg.style.color = "#4caf50";
+                
+            } catch (error) {
+                console.error(error);
+                msg.innerText = "❌ LỖI: " + error.message;
+                msg.style.color = "red";
+                document.getElementById('error-log').style.display = 'block';
+                document.getElementById('error-log').innerText = "Chi tiết lỗi: " + error.message;
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "LƯU LÊN CLOUD ☁️";
+            }
+        });
+    </script>
+</body>
+</html>

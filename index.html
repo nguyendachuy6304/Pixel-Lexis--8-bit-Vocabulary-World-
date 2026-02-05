@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Lexis - Trang Chủ</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Style cho thanh điều hướng trên cùng */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 2px dashed #555;
+            padding-bottom: 10px;
+        }
+        .user-info {
+            font-size: 18px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="top-bar">
+            <span id="user-email" class="user-info">Đang tải...</span>
+            <button id="btn-logout" class="pixel-btn secondary small" style="width: auto; padding: 5px 10px;">🚪 ĐĂNG XUẤT</button>
+        </div>
+
+        <header class="game-header">
+            <h1>PIXEL LEXIS</h1>
+            <p>CHỌN VÙNG ĐẤT ĐỂ KHÁM PHÁ</p>
+        </header>
+
+        <div class="world-list">
+            
+            <div class="world-card" onclick="window.location.href='map-rung.html'">
+                <h3>1. RỪNG KHỞI ĐẦU 🌲</h3>
+                <p>Bài tập nhập môn (Dễ)</p>
+            </div>
+
+            <div class="world-card" onclick="window.location.href='map-city.html'">
+                <h3 style="color: #00e5ff;">2. THÀNH PHỐ CODE 🏙️</h3>
+                <p>Từ vựng công nghệ (Trung bình)</p>
+            </div>
+            
+            <div class="world-card" onclick="window.location.href='map-dungeon.html'" style="border-color: #d32f2f;">
+                <h3 style="color: #d32f2f;">3. HẦM NGỤC TỐI 💀</h3>
+                <p>Thử thách sinh tồn (Khó)</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth, signOut, onAuthStateChanged } from './js/firebase-init.js';
+
+        const userEmailDisplay = document.getElementById("user-email");
+        const btnLogout = document.getElementById("btn-logout");
+
+        // 1. KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Nếu đã đăng nhập -> Hiện tên
+                userEmailDisplay.innerText = "👤 " + user.email;
+            } else {
+                // Nếu chưa đăng nhập -> Đuổi về trang Login
+                window.location.href = "login.html";
+            }
+        });
+
+        // 2. XỬ LÝ ĐĂNG XUẤT
+        btnLogout.addEventListener("click", () => {
+            if(confirm("Bạn muốn đăng xuất chứ?")) {
+                signOut(auth).then(() => {
+                    window.location.href = "login.html";
+                }).catch((error) => {
+                    alert("Lỗi: " + error.message);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

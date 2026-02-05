@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map: Rừng Khởi Đầu</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="game-container">
+        <header class="game-header">
+            <h1>🌲 RỪNG KHỞI ĐẦU 🌲</h1>
+            <p>Level 1: Nhập môn</p>
+        </header>
+
+        <div id="map-screen">
+            <div class="home-btn-container">
+                <button class="pixel-btn secondary small" onclick="window.location.href='index.html'">⬅ VỀ TRANG CHỦ</button>
+            </div>
+            <div class="map-grid" id="level-list" style="color: #ffcc00;">
+                ⏳ Đang tải dữ liệu từ mây...
+            </div>
+        </div>
+
+        <main id="battle-screen" class="hidden">
+            <button id="btn-pause-toggle" class="pixel-btn">⏸ MENU</button>
+
+            <div id="pause-modal" class="hidden">
+                <div class="pause-content">
+                    <h2>TẠM DỪNG</h2>
+                    <button id="btn-resume" class="pixel-btn">TIẾP TỤC</button>
+                    <button id="btn-restart" class="pixel-btn">CHƠI LẠI</button>
+                    <button id="btn-menu-map" class="pixel-btn secondary">THOÁT RA BẢN ĐỒ</button>
+                    <button id="btn-menu-home" class="pixel-btn secondary">VỀ TRANG CHỦ</button>
+                </div>
+            </div>
+
+            <div class="status-bar">
+                <div class="player-stats">
+                    <span>HERO</span>
+                    <div class="hp-bar"><div class="hp-fill" id="hero-hp" style="width: 100%;"></div></div>
+                </div>
+                <div class="monster-stats">
+                    <span id="monster-name">MONSTER</span>
+                    <div class="hp-bar"><div class="hp-fill" id="monster-hp" style="width: 100%;"></div></div>
+                </div>
+            </div>
+
+            <div class="monster-area">
+                <div class="pixel-monster">👾</div>
+            </div>
+
+            <div class="dialog-box">
+                <p id="question-text">...</p>
+            </div>
+
+            <div class="player-actions">
+                <input type="text" class="pixel-input" placeholder="NHẬP ĐÁP ÁN...">
+                <button class="pixel-btn" id="btn-attack">TẤN CÔNG</button>
+            </div>
+            
+            <button class="pixel-btn secondary hidden" id="btn-back-map" style="margin-top: 10px;">QUAY VỀ BẢN ĐỒ</button>
+        </main>
+    </div>
+
+    <script src="js/core.js"></script>
+
+    <script type="module">
+        import { db, collection, getDocs } from './js/firebase-init.js';
+
+        async function loadData() {
+            try {
+                // Trỏ tới thư mục: worlds -> map_rung -> levels
+                const querySnapshot = await getDocs(collection(db, "worlds", "map_rung", "levels"));
+                
+                const levels = [];
+                querySnapshot.forEach((doc) => {
+                    levels.push(doc.data());
+                });
+
+                // Sắp xếp level theo ID (1, 2, 3...)
+                levels.sort((a, b) => a.id - b.id);
+
+                if (levels.length > 0) {
+                    // Gọi hàm initMap trong core.js để vẽ giao diện
+                    // (Lưu biến levels vào window để core.js dùng lại khi cần)
+                    window.currentMapLevels = levels; 
+                    initMap(levels);
+                } else {
+                    document.getElementById("level-list").innerText = "⚠️ Chưa có dữ liệu trên Cloud!";
+                }
+
+            } catch (error) {
+                console.error("Lỗi tải map:", error);
+                document.getElementById("level-list").innerText = "❌ Lỗi kết nối: " + error.message;
+            }
+        }
+
+        // Chạy hàm tải dữ liệu
+        loadData();
+    </script>
+</body>
+</html>

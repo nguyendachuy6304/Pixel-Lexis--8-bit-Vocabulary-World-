@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Pixel Lexis - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .login-box { max-width: 450px; margin: 0 auto; text-align: center; border-color: var(--primary-color); }
+        .role-btn { width: 100%; margin-bottom: 20px; font-size: 24px; padding: 15px; }
+        .hidden { display: none !important; }
+        input { width: 100%; margin-bottom: 15px; box-sizing: border-box; }
+        .error-msg { color: #ff5555; margin-top: 10px; font-weight: bold; min-height: 24px; }
+        
+        /* Style cho 2 nút trong form Học sinh */
+        .action-buttons { display: flex; gap: 10px; }
+        .action-buttons button { flex: 1; }
+    </style>
+</head>
+<body>
+    <div class="game-container login-box">
+        <header class="game-header">
+            <h1>PIXEL LEXIS</h1>
+            <p id="header-subtitle">Chọn vai trò để bắt đầu</p>
+        </header>
+
+        <div id="role-select">
+            <button id="btn-student-role" class="pixel-btn role-btn">🐣 HỌC SINH (Vào chơi)</button>
+            <button id="btn-teacher-role" class="pixel-btn role-btn secondary">🧑‍🏫 GIÁO VIÊN (Quản lý)</button>
+        </div>
+
+        <div id="login-form-container" class="hidden">
+            <h3 id="form-title" style="color: #ffcc00; margin-top: 0;">ĐĂNG NHẬP</h3>
+            
+            <label style="text-align: left; display: block; color: #aaa;">Email:</label>
+            <input type="email" id="email" class="pixel-input" placeholder="ten@email.com">
+            
+            <label style="text-align: left; display: block; color: #aaa;">Mật khẩu:</label>
+            <input type="password" id="password" class="pixel-input" placeholder="******">
+            
+            <p id="login-error" class="error-msg"></p>
+
+            <div id="student-actions" class="action-buttons hidden">
+                <button class="pixel-btn" id="btn-student-login" style="background-color: #4caf50;">ĐĂNG NHẬP</button>
+                <button class="pixel-btn secondary" id="btn-student-register">ĐĂNG KÝ MỚI</button>
+            </div>
+
+            <div id="teacher-actions" class="hidden">
+                <button class="pixel-btn" id="btn-teacher-login" style="width: 100%;">TRUY CẬP ADMIN</button>
+            </div>
+            
+            <br>
+            <button id="btn-back" class="pixel-btn small" style="background: #555;">⬅ Quay lại</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from './js/firebase-init.js';
+
+        // Elements
+        const roleScreen = document.getElementById("role-select");
+        const formContainer = document.getElementById("login-form-container");
+        const formTitle = document.getElementById("form-title");
+        const studentActions = document.getElementById("student-actions");
+        const teacherActions = document.getElementById("teacher-actions");
+        const errDisplay = document.getElementById("login-error");
+        
+        let currentRole = ""; // 'student' hoặc 'teacher'
+
+        // --- 1. CHUYỂN ĐỔI GIAO DIỆN ---
+        function showForm(role) {
+            currentRole = role;
+            roleScreen.classList.add("hidden");
+            formContainer.classList.remove("hidden");
+            errDisplay.innerText = "";
+            document.getElementById("email").value = "";
+            document.getElementById("password").value = "";
+
+            if (role === 'student') {
+                formTitle.innerText = "CỔNG HỌC TẬP";
+                formTitle.style.color = "#4caf50";
+                studentActions.classList.remove("hidden");
+                teacherActions.classList.add("hidden");
+            } else {
+                formTitle.innerText = "CỔNG GIÁO VIÊN";
+                formTitle.style.color = "#ffcc00";
+                studentActions.classList.add("hidden");
+                teacherActions.classList.remove("hidden");
+            }
+        }
+
+        document.getElementById("btn-student-role").addEventListener("click", () => showForm('student'));
+        document.getElementById("btn-teacher-role").addEventListener("click", () => showForm('teacher'));
+
+        document.getElementById("btn-back").addEventListener("click", () => {
+            roleScreen.classList.remove("hidden");
+            formContainer.classList.add("hidden");
+        });
+
+        // --- 2. XỬ LÝ AUTHENTICATION ---
+        
+        // Hàm hiển thị lỗi thân thiện
+        function handleError(error) {
+            console.error(error);
+            if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') return "❌ Sai Email hoặc Mật khẩu!";
+            if (error.code === 'auth/user-not-found') return "❌ Tài khoản không tồn tại!";
+            if (error.code === 'auth/email-already-in-use') return "❌ Email này đã được đăng ký!";
+            if (error.code === 'auth/weak-password') return "❌ Mật khẩu phải > 6 ký tự!";
+            if (error.code === 'auth/invalid-email') return "❌ Email không hợp lệ!";
+            return "❌ Lỗi: " + error.code;
+        }
+
+        // A. ĐĂNG NHẬP (Dùng chung cho cả 2 role, chỉ khác nơi chuyển đến)
+        async function handleLogin() {
+            const email = document.getElementById("email").value;
+            const pass = document.getElementById("password").value;
+            errDisplay.innerText = "Đang xử lý...";
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+                errDisplay.innerText = "✅ Thành công!";
+                errDisplay.style.color = "#4caf50";
+                
+                setTimeout(() => {
+                    if (currentRole === 'student') window.location.href = "index.html";
+                    else window.location.href = "admin.html";
+                }, 1000);
+            } catch (error) {
+                errDisplay.style.color = "#ff5555";
+                errDisplay.innerText = handleError(error);
+            }
+        }
+
+        // B. ĐĂNG KÝ (Chỉ dành cho Học sinh)
+        async function handleRegister() {
+            const email = document.getElementById("email").value;
+            const pass = document.getElementById("password").value;
+            errDisplay.innerText = "Đang tạo tài khoản...";
+
+            try {
+                await createUserWithEmailAndPassword(auth, email, pass);
+                errDisplay.innerText = "✅ Tạo tài khoản thành công!";
+                errDisplay.style.color = "#4caf50";
+                
+                setTimeout(() => {
+                    window.location.href = "index.html"; // Đăng ký xong vào chơi luôn
+                }, 1000);
+            } catch (error) {
+                errDisplay.style.color = "#ff5555";
+                errDisplay.innerText = handleError(error);
+            }
+        }
+
+        // Gán sự kiện cho các nút
+        document.getElementById("btn-teacher-login").addEventListener("click", handleLogin);
+        document.getElementById("btn-student-login").addEventListener("click", handleLogin);
+        document.getElementById("btn-student-register").addEventListener("click", handleRegister);
+
+    </script>
+</body>
+</html>

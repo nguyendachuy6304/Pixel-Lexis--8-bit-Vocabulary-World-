@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map: Hầm Ngục Tối</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="game-container" style="border-color: #d32f2f;">
+        <header class="game-header">
+            <h1 style="color: #d32f2f;">💀 HẦM NGỤC TỐI 💀</h1>
+            <p>Level 3: Nguy hiểm!</p>
+        </header>
+
+        <div id="map-screen">
+            <div class="home-btn-container">
+                <button class="pixel-btn secondary small" onclick="window.location.href='index.html'">⬅ THOÁT RA</button>
+            </div>
+            <div class="map-grid" id="level-list" style="color: #d32f2f;">
+                ⏳ Đang triệu hồi dữ liệu...
+            </div>
+        </div>
+
+        <main id="battle-screen" class="hidden">
+            <button id="btn-pause-toggle" class="pixel-btn">⏸ MENU</button>
+            <div id="pause-modal" class="hidden">
+                <div class="pause-content">
+                    <h2>TẠM DỪNG</h2>
+                    <button id="btn-resume" class="pixel-btn">TIẾP TỤC</button>
+                    <button id="btn-restart" class="pixel-btn">CHƠI LẠI</button>
+                    <button id="btn-menu-map" class="pixel-btn secondary">THOÁT RA BẢN ĐỒ</button>
+                    <button id="btn-menu-home" class="pixel-btn secondary">VỀ TRANG CHỦ</button>
+                </div>
+            </div>
+
+            <div class="status-bar">
+                <div class="player-stats">
+                    <span>KNIGHT</span>
+                    <div class="hp-bar"><div class="hp-fill" id="hero-hp" style="width: 100%;"></div></div>
+                </div>
+                <div class="monster-stats">
+                    <span id="monster-name">DEMON</span>
+                    <div class="hp-bar"><div class="hp-fill" id="monster-hp" style="width: 100%;"></div></div>
+                </div>
+            </div>
+
+            <div class="monster-area">
+                <div class="pixel-monster">👻</div>
+            </div>
+
+            <div class="dialog-box">
+                <p id="question-text">...</p>
+            </div>
+
+            <div class="player-actions">
+                <input type="text" class="pixel-input" placeholder="DÙNG PHÉP...">
+                <button class="pixel-btn" id="btn-attack" style="background-color: #d32f2f;">TẤN CÔNG</button>
+            </div>
+            <button class="pixel-btn secondary hidden" id="btn-back-map" style="margin-top: 10px;">QUAY VỀ BẢN ĐỒ</button>
+        </main>
+    </div>
+
+    <script src="js/core.js"></script>
+
+    <script type="module">
+        import { db, collection, getDocs } from './js/firebase-init.js';
+
+        async function loadData() {
+            try {
+                // Lấy dữ liệu từ map_dungeon
+                const querySnapshot = await getDocs(collection(db, "worlds", "map_dungeon", "levels"));
+                const levels = [];
+                querySnapshot.forEach((doc) => levels.push(doc.data()));
+                levels.sort((a, b) => a.id - b.id);
+
+                if (levels.length > 0) {
+                    window.currentMapLevels = levels;
+                    initMap(levels);
+                } else {
+                    document.getElementById("level-list").innerText = "⚠️ Hầm ngục trống rỗng!";
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById("level-list").innerText = "❌ Lỗi kết nối!";
+            }
+        }
+        loadData();
+    </script>
+</body>
+</html>
