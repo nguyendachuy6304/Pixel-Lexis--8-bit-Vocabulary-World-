@@ -39,16 +39,29 @@
             <div class="status-bar">
                 <div class="player-stats">
                     <span>CODER</span>
-                    <div class="hp-bar"><div class="hp-fill" id="hero-hp" style="width: 100%;"></div></div>
+                    <div class="hp-bar">
+                        <div class="hp-fill" id="hero-hp" style="width: 100%;"></div>
+                        <span class="hp-text" id="hero-hp-text">100/100</span>
+                    </div>
                 </div>
                 <div class="monster-stats">
                     <span id="monster-name">BUG</span>
-                    <div class="hp-bar"><div class="hp-fill" id="monster-hp" style="width: 100%;"></div></div>
+                    <div class="hp-bar">
+                        <div class="hp-fill" id="monster-hp" style="width: 100%;"></div>
+                        <span class="hp-text" id="monster-hp-text">100/100</span>
+                    </div>
                 </div>
             </div>
 
             <div class="monster-area">
-                <div class="pixel-monster">🤖</div>
+                <div class="character-display">
+                    <div class="character-name">CODER</div>
+                    <div class="pixel-hero">💻</div>
+                </div>
+                <div class="character-display">
+                    <div class="character-name" id="monster-title">BUG</div>
+                    <div class="pixel-monster">🤖</div>
+                </div>
             </div>
 
             <div class="dialog-box">
@@ -78,7 +91,7 @@
 
                 if (levels.length > 0) {
                     window.currentMapLevels = levels;
-                    initMap(levels);
+                    window.initMap(levels, "map_city");
                 } else {
                     document.getElementById("level-list").innerText = "⚠️ Chưa có bài tập nào!";
                 }

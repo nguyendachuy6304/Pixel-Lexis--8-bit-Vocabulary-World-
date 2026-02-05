@@ -6,27 +6,35 @@
     <title>Map: Rừng Khởi Đầu</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Tùy chỉnh nhỏ để map đẹp hơn */
+        .game-header { position: relative; z-index: 20; text-shadow: 2px 2px 0 #000; }
+        /* Ẩn bớt các phần thừa khi ở map screen */
+        #map-screen { position: relative; z-index: 1; }
+    </style>
 </head>
 <body>
 
     <div class="game-container">
         <header class="game-header">
             <h1>🌲 RỪNG KHỞI ĐẦU 🌲</h1>
-            <p>Level 1: Nhập môn</p>
+            <p>Hoàn thành từng trạm để mở lối đi tiếp!</p>
         </header>
 
         <div id="map-screen">
-            <div class="home-btn-container">
+            <div class="home-btn-container" style="margin-bottom: 10px; text-align: center;">
                 <button class="pixel-btn secondary small" onclick="window.location.href='index.html'">⬅ VỀ TRANG CHỦ</button>
             </div>
-            <div class="map-grid" id="level-list" style="color: #ffcc00;">
-                ⏳ Đang tải dữ liệu từ mây...
+            
+            <div id="level-list" class="world-map-container bg-forest">
+                <div style="text-align: center; padding-top: 200px; color: #fff; font-size: 24px;">
+                    ⏳ Đang tải bản đồ...
+                </div>
             </div>
         </div>
 
         <main id="battle-screen" class="hidden">
             <button id="btn-pause-toggle" class="pixel-btn">⏸ MENU</button>
-
             <div id="pause-modal" class="hidden">
                 <div class="pause-content">
                     <h2>TẠM DỪNG</h2>
@@ -36,20 +44,32 @@
                     <button id="btn-menu-home" class="pixel-btn secondary">VỀ TRANG CHỦ</button>
                 </div>
             </div>
-
             <div class="status-bar">
                 <div class="player-stats">
                     <span>HERO</span>
-                    <div class="hp-bar"><div class="hp-fill" id="hero-hp" style="width: 100%;"></div></div>
+                    <div class="hp-bar">
+                        <div class="hp-fill" id="hero-hp" style="width: 100%;"></div>
+                        <span class="hp-text" id="hero-hp-text">100/100</span>
+                    </div>
                 </div>
                 <div class="monster-stats">
                     <span id="monster-name">MONSTER</span>
-                    <div class="hp-bar"><div class="hp-fill" id="monster-hp" style="width: 100%;"></div></div>
+                    <div class="hp-bar">
+                        <div class="hp-fill" id="monster-hp" style="width: 100%;"></div>
+                        <span class="hp-text" id="monster-hp-text">100/100</span>
+                    </div>
                 </div>
             </div>
 
             <div class="monster-area">
-                <div class="pixel-monster">👾</div>
+                <div class="character-display">
+                    <div class="character-name">HERO</div>
+                    <div class="pixel-hero">⚔️</div>
+                </div>
+                <div class="character-display">
+                    <div class="character-name" id="monster-title">BOSS</div>
+                    <div class="pixel-monster">👾</div>
+                </div>
             </div>
 
             <div class="dialog-box">
@@ -57,9 +77,7 @@
             </div>
 
             <div class="player-actions">
-                <input type="text" class="pixel-input" placeholder="NHẬP ĐÁP ÁN...">
-                <button class="pixel-btn" id="btn-attack">TẤN CÔNG</button>
-            </div>
+                </div>
             
             <button class="pixel-btn secondary hidden" id="btn-back-map" style="margin-top: 10px;">QUAY VỀ BẢN ĐỒ</button>
         </main>
@@ -68,37 +86,45 @@
     <script src="js/core.js"></script>
 
     <script type="module">
-        import { db, collection, getDocs } from './js/firebase-init.js';
+        import { db, collection, getDocs, doc, updateDoc } from './js/firebase-init.js';
 
+        const MAP_ID = "map_rung"; // Đổi thành map_city hoặc map_dungeon ở các file kia
+
+        // 1. Hàm lưu tiến độ (Được core.js gọi khi thắng)
+        window.saveLevelProgress = async function(mapId, levelId) {
+            try {
+                // Cập nhật trạng thái Completed lên Firebase
+                const levelRef = doc(db, "worlds", MAP_ID, "levels", levelId.toString());
+                await updateDoc(levelRef, { completed: true });
+                console.log(`Đã lưu hoàn thành Level ${levelId}`);
+                
+                // Tải lại map để mở khóa màn mới
+                loadData(); 
+            } catch (error) {
+                console.error("Lỗi lưu game:", error);
+            }
+        };
+
+        // 2. Hàm tải dữ liệu
         async function loadData() {
             try {
-                // Trỏ tới thư mục: worlds -> map_rung -> levels
-                const querySnapshot = await getDocs(collection(db, "worlds", "map_rung", "levels"));
-                
+                const querySnapshot = await getDocs(collection(db, "worlds", MAP_ID, "levels"));
                 const levels = [];
-                querySnapshot.forEach((doc) => {
-                    levels.push(doc.data());
-                });
-
-                // Sắp xếp level theo ID (1, 2, 3...)
-                levels.sort((a, b) => a.id - b.id);
+                querySnapshot.forEach((doc) => levels.push(doc.data()));
 
                 if (levels.length > 0) {
-                    // Gọi hàm initMap trong core.js để vẽ giao diện
-                    // (Lưu biến levels vào window để core.js dùng lại khi cần)
-                    window.currentMapLevels = levels; 
-                    initMap(levels);
+                    window.currentMapLevels = levels;
+                    // Gọi hàm initMap mới với tham số MAP_ID (dùng window. vì đây là module script)
+                    window.initMap(levels, MAP_ID); 
                 } else {
-                    document.getElementById("level-list").innerText = "⚠️ Chưa có dữ liệu trên Cloud!";
+                    document.getElementById("level-list").innerHTML = "<p style='color:white; text-align:center; padding-top:50px;'>⚠️ Chưa có dữ liệu map!</p>";
                 }
-
             } catch (error) {
-                console.error("Lỗi tải map:", error);
-                document.getElementById("level-list").innerText = "❌ Lỗi kết nối: " + error.message;
+                console.error(error);
+                document.getElementById("level-list").innerText = "❌ Lỗi kết nối!";
             }
         }
-
-        // Chạy hàm tải dữ liệu
+        
         loadData();
     </script>
 </body>

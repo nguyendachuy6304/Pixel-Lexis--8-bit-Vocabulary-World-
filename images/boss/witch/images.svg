@@ -1,0 +1,48 @@
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- Witch Boss - 8-bit Pixel Art -->
+  <style>
+    .pixel { shape-rendering: crispEdges; }
+  </style>
+  
+  <!-- Background -->
+  <rect width="256" height="256" fill="#1a0033"/>
+  
+  <!-- Hat -->
+  <polygon class="pixel" points="85,15 171,15 165,35 91,35" fill="#1a0033" stroke="#800080" stroke-width="2"/>
+  <polygon class="pixel" points="90,30 166,30 160,50 96,50" fill="#330066" stroke="#800080" stroke-width="2"/>
+  <circle class="pixel" cx="128" cy="25" r="8" fill="#ffd700"/>
+  
+  <!-- Head -->
+  <rect class="pixel" x="85" y="50" width="86" height="70" fill="#d4a574"/>
+  <!-- Face -->
+  <rect class="pixel" x="95" y="60" width="66" height="50" fill="#c4975d"/>
+  <!-- Left Eye -->
+  <rect class="pixel" x="105" y="70" width="12" height="12" fill="#000"/>
+  <rect class="pixel" x="107" y="72" width="4" height="4" fill="#999"/>
+  <!-- Right Eye -->
+  <rect class="pixel" x="139" y="70" width="12" height="12" fill="#000"/>
+  <rect class="pixel" x="141" y="72" width="4" height="4" fill="#999"/>
+  <!-- Nose (Witch) -->
+  <rect class="pixel" x="125" y="82" width="6" height="8" fill="#996b3d"/>
+  <!-- Mouth -->
+  <path class="pixel" d="M 115 95 L 120 98 L 125 96 L 130 98 L 135 95" stroke="#000" stroke-width="2" fill="none"/>
+  
+  <!-- Robe (Purple) -->
+  <polygon class="pixel" points="65,120 65,200 191,200 191,120 165,110 155,115 145,110 135,115 125,110 115,115 105,110 95,115 85,110" fill="#4b0082"/>
+  <!-- Darker trim -->
+  <polygon class="pixel" points="70,125 70,195 186,195 186,125 167,116 155,121 145,116 135,121 125,116 115,121 105,116 95,121 87,116" fill="#2c004a"/>
+  
+  <!-- Arms -->
+  <rect class="pixel" x="20" y="140" width="45" height="60" fill="#8b5a3c"/>
+  <rect class="pixel" x="191" y="140" width="45" height="60" fill="#8b5a3c"/>
+  <!-- Hands (Pointing/Claw) -->
+  <polygon class="pixel" points="15,200 8,210 15,205 22,210 15,200" fill="#8b5a3c"/>
+  <polygon class="pixel" points="241,200 248,210 241,205 234,210 241,200" fill="#8b5a3c"/>
+  
+  <!-- Broomstick (at side) -->
+  <rect class="pixel" x="225" y="180" width="8" height="40" fill="#8b4513" stroke="#654321" stroke-width="1"/>
+  <!-- Broom bristles -->
+  <line class="pixel" x1="230" y1="220" x2="220" y2="232" stroke="#d4a574" stroke-width="3"/>
+  <line class="pixel" x1="230" y1="220" x2="235" y2="232" stroke="#d4a574" stroke-width="3"/>
+  <line class="pixel" x1="230" y1="220" x2="245" y2="228" stroke="#d4a574" stroke-width="3"/>
+</svg>

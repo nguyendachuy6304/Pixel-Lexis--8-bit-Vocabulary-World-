@@ -63,35 +63,197 @@ body {
 .status-bar {
     display: flex;
     justify-content: space-between;
+    gap: 30px;
     margin-bottom: 20px;
-    font-size: 20px; /* Chữ to rõ hơn */
+    font-size: 16px;
+    align-items: flex-start;
+}
+
+.player-stats, .monster-stats {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.player-stats span, .monster-stats span {
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-transform: uppercase;
 }
 
 .hp-bar {
-    width: 120px; /* Dài hơn chút cho đẹp */
-    height: 15px;
+    width: 100%;
+    height: 20px;
     background-color: #000;
-    margin-top: 5px;
     border: 2px solid #fff;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .hp-fill {
     height: 100%;
     background-color: var(--accent-color);
-    transition: width 0.3s ease; /* Hiệu ứng tụt máu mượt mà */
+    transition: width 0.3s ease;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.hp-text {
+    position: absolute;
+    color: #ffff00;
+    font-weight: bold;
+    font-size: 14px;
+    text-shadow: 1px 1px 2px #000;
+    z-index: 10;
 }
 
 /* Khu vực quái vật */
 .monster-area {
-    height: 150px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 200px;
+    margin-bottom: 30px;
+}
+
+.character-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.pixel-monster, .pixel-hero {
+    width: 120px;
+    height: 120px;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: rgba(0,0,0,0.3);
+    border: 3px solid #fff;
+    border-radius: 5px;
 }
 
-.pixel-monster {
-    font-size: 100px; /* Quái vật to hơn */
-    animation: float 2s infinite ease-in-out; /* Hiệu ứng bay lên xuống */
+.pixel-monster img, .pixel-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    animation: float 2s infinite ease-in-out;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.character-name {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+/* Hiệu ứng tấn công */
+@keyframes attack-monster {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(20px); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes attack-hero {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(-20px); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes fire-breath {
+    0% { opacity: 0; transform: scaleX(0); }
+    50% { opacity: 1; }
+    100% { opacity: 0; transform: scaleX(1); }
+}
+
+@keyframes shoot-arrow {
+    0% { opacity: 1; transform: translateX(0); }
+    100% { opacity: 0; transform: translateX(80px); }
+}
+
+.attacking-monster {
+    animation: attack-monster 0.6s ease-in-out;
+}
+
+.attacking-hero {
+    animation: attack-hero 0.6s ease-in-out;
+}
+
+.fire-effect {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, #ff6f00 0%, #ff9800 50%, transparent 70%);
+    border-radius: 50%;
+    animation: fire-breath 0.8s ease-out;
+    pointer-events: none;
+}
+
+.arrow-effect {
+    position: absolute;
+    width: 30px;
+    height: 5px;
+    background: #ffd700;
+    animation: shoot-arrow 0.7s ease-in;
+    pointer-events: none;
+}
+
+/* Shake effect cho tấn công */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.shake-screen {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes explosion-burst {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--tx), var(--ty)) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes fire-spread {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--spreadx), var(--spready)) scale(0.3);
+        opacity: 0;
+    }
+}
+
+@keyframes flash-fade {
+    0% { opacity: 0.8; }
+    100% { opacity: 0; }
+}
+
+@keyframes damage-float {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) scale(0.5);
+        opacity: 0;
+    }
 }
 
 /* Khung hội thoại */
@@ -157,20 +319,7 @@ body {
     50% { transform: translateY(-10px); }
 }
 
-/* --- Hiệu ứng Rung khi bị tấn công --- */
-@keyframes shake {
-  0% { transform: translate(1px, 1px) rotate(0deg); }
-  10% { transform: translate(-1px, -2px) rotate(-1deg); }
-  20% { transform: translate(-3px, 0px) rotate(1deg); }
-  30% { transform: translate(3px, 2px) rotate(0deg); }
-  40% { transform: translate(1px, -1px) rotate(1deg); }
-  50% { transform: translate(-1px, 2px) rotate(-1deg); }
-  60% { transform: translate(-3px, 1px) rotate(0deg); }
-  70% { transform: translate(3px, 1px) rotate(-1deg); }
-  80% { transform: translate(-1px, -1px) rotate(1deg); }
-  90% { transform: translate(1px, 2px) rotate(0deg); }
-  100% { transform: translate(1px, -2px) rotate(-1deg); }
-}
+/* Hiệu ứng Rung khi bị tấn công được định nghĩa ở trên */
 
 /* --- CÁC CLASS TIỆN ÍCH --- */
 .hidden {
@@ -274,4 +423,346 @@ body {
     color: var(--primary-color);
     margin-top: 0;
     text-transform: uppercase;
+}
+
+/* --- TRẮC NGHIỆM (Multiple Choice) --- */
+.mc-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.mc-btn {
+    background-color: #3e3e3e;
+    border: 2px solid #fff;
+    color: #fff;
+    padding: 15px;
+    font-family: var(--font-main);
+    font-size: 20px;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.2s;
+}
+
+.mc-btn:hover {
+    background-color: var(--primary-color);
+    color: #000;
+}
+
+.mc-btn:active {
+    transform: translate(2px, 2px);
+}
+
+/* Ẩn hiện các phần tử nhập liệu */
+.input-area.hidden { display: none; }
+
+/* --- THÊM VÀO CUỐI FILE STYLE.CSS --- */
+
+/* Khu vực hiển thị Buff */
+.buff-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 10px;
+    padding: 5px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 5px;
+}
+
+.buff-item {
+    font-size: 24px;
+    position: relative;
+    cursor: help;
+}
+
+.buff-item:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border: 1px solid #fff;
+    font-size: 16px;
+    white-space: nowrap;
+    z-index: 10;
+    font-family: 'VT323', monospace;
+}
+
+/* Hiệu ứng Critical */
+@keyframes crit-shake {
+    0% { transform: translate(0, 0) scale(1.5); }
+    25% { transform: translate(-5px, 5px) scale(1.5); }
+    50% { transform: translate(5px, -5px) scale(1.5); }
+    75% { transform: translate(-5px, -5px) scale(1.5); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+.crit-effect {
+    color: #ffeb3b !important;
+    font-size: 24px !important;
+    text-shadow: 2px 2px #d32f2f;
+    animation: crit-shake 0.3s;
+}
+
+/* --- THÊM VÀO CUỐI FILE STYLE.CSS --- */
+
+/* Khu vực hiển thị Buff */
+.buff-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 10px;
+    padding: 8px;
+    background: rgba(0,0,0,0.6);
+    border: 2px solid #555;
+    border-radius: 5px;
+    min-height: 40px;
+}
+
+.buff-item {
+    font-size: 28px;
+    position: relative;
+    cursor: help;
+    transition: transform 0.2s;
+}
+
+.buff-item:hover {
+    transform: scale(1.2);
+}
+
+/* Tooltip hiển thị tên Buff khi di chuột vào */
+.buff-item:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #222;
+    color: #ffeb3b;
+    padding: 5px 10px;
+    border: 1px solid #fff;
+    font-size: 16px;
+    white-space: nowrap;
+    z-index: 100;
+    font-family: 'VT323', monospace;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+/* Hiệu ứng Critical (Bạo kích) */
+@keyframes crit-shake {
+    0% { transform: translate(0, 0) scale(1.5); }
+    20% { transform: translate(-5px, 5px) scale(1.5); }
+    40% { transform: translate(5px, -5px) scale(1.5); }
+    60% { transform: translate(-5px, -5px) scale(1.5); }
+    80% { transform: translate(0, 0) scale(1.2); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+.crit-effect {
+    color: #ffeb3b !important;
+    font-size: 32px !important;
+    text-shadow: 3px 3px #d32f2f;
+    font-weight: bold;
+    animation: crit-shake 0.4s ease-out;
+}
+
+/* --- CẬP NHẬT STYLE CHO BUFF --- */
+
+.buff-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: rgba(0,0,0,0.7);
+    border: 2px solid #555;
+    border-radius: 8px;
+    min-height: 50px;
+}
+
+.buff-item {
+    font-size: 28px;
+    position: relative;
+    cursor: pointer; /* Con trỏ tay chỉ vào để bấm */
+    transition: all 0.2s;
+    border: 2px solid transparent; /* Viền ẩn */
+    border-radius: 5px;
+    padding: 5px;
+    background: #222;
+}
+
+/* Hiệu ứng khi di chuột vào Buff chưa dùng */
+.buff-item:not(.used):hover {
+    transform: translateY(-5px);
+    border-color: #aaa;
+}
+
+/* Hiệu ứng khi ĐANG CHỌN (Selected) */
+.buff-item.selected {
+    border-color: #ffeb3b; /* Viền vàng sáng */
+    box-shadow: 0 0 10px #ffeb3b;
+    transform: scale(1.1);
+    background: #444;
+}
+
+/* Hiệu ứng khi ĐÃ DÙNG (Disabled) */
+.buff-item.used {
+    opacity: 0.3; /* Mờ đi */
+    filter: grayscale(100%); /* Mất màu */
+    cursor: not-allowed; /* Cấm bấm */
+    transform: scale(0.9);
+    border-color: #333;
+}
+
+/* Tooltip (Giữ nguyên, chỉ chỉnh lại z-index cao hơn) */
+.buff-item:hover::after {
+    z-index: 1000;
+}
+
+/* --- GIAO DIỆN BẢN ĐỒ GAME (MAP UI) --- */
+
+/* Khung chứa bản đồ */
+.world-map-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    height: 600px; /* Chiều cao cố định để vẽ bản đồ */
+    margin: 0 auto;
+    background-color: #222;
+    background-size: cover;
+    background-position: center;
+    border: 4px solid #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    overflow: hidden; /* Giấu phần thừa nếu có */
+}
+
+/* Điểm mốc Level (Nút tròn trên bản đồ) */
+.map-node {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-color: #555;
+    border: 3px solid #fff;
+    border-radius: 50%; /* Hình tròn */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    z-index: 2;
+    box-shadow: 3px 3px 0 #000;
+}
+
+/* Hiệu ứng khi di chuột vào Level */
+.map-node:hover:not(:disabled) {
+    transform: scale(1.2) translateY(-5px);
+    z-index: 10;
+}
+
+/* Trạng thái đã mở khóa (Chưa chơi xong) */
+.map-node.unlocked {
+    background-color: #ffcc00; /* Màu vàng sáng */
+    color: #000;
+    border-color: #fff;
+    animation: bounce 2s infinite;
+}
+
+/* Trạng thái đã hoàn thành */
+.map-node.completed {
+    background-color: #4caf50; /* Màu xanh lá */
+    color: #fff;
+    border-color: #2e7d32;
+}
+
+/* Trạng thái bị khóa */
+.map-node:disabled {
+    background-color: #333;
+    color: #777;
+    border-color: #555;
+    cursor: not-allowed;
+    filter: grayscale(100%);
+}
+
+/* Nhãn tên Level (Hiện ra bên dưới nút tròn) */
+.map-node::after {
+    content: attr(data-label);
+    position: absolute;
+    top: 65px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    color: #fff;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    font-family: 'VT323', monospace;
+    pointer-events: none;
+    text-shadow: none;
+}
+
+/* --- ĐƯỜNG KẺ NỐI CÁC LEVEL (SVG) --- */
+.map-connections {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Nằm dưới các nút */
+    pointer-events: none;
+}
+
+.connection-line {
+    stroke: #fff;
+    stroke-width: 4;
+    stroke-dasharray: 10; /* Nét đứt */
+    fill: none;
+    opacity: 0.5;
+}
+
+/* --- CẬP NHẬT: HÌNH NỀN BẢN ĐỒ (Local Images) --- */
+.bg-forest {
+    /* Ảnh rừng từ local */
+    background-image: url('../images/forest.jpg'); 
+    background-size: cover;
+    background-position: center;
+    border-color: #4caf50;
+}
+.bg-city {
+    /* Ảnh thành phố từ local */
+    background-image: url('../images/city.jpg');
+    background-size: cover;
+    background-position: center;
+    border-color: #00e5ff;
+}
+.bg-dungeon {
+    /* Ảnh hầm ngục từ local */
+    background-image: url('../images/dungeon.jpg');
+    background-size: cover;
+    background-position: center;
+    border-color: #d32f2f;
+}
+
+/* Đảm bảo hình nền phủ kín và đẹp */
+.world-map-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    height: 600px; 
+    margin: 0 auto;
+    background-color: #222; /* Màu nền dự phòng */
+    background-size: cover; /* Ảnh phủ kín khung */
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 4px solid #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    overflow: hidden;
 }

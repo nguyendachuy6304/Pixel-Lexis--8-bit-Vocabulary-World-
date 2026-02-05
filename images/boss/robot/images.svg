@@ -1,0 +1,45 @@
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- Robot Boss - 8-bit Pixel Art -->
+  <style>
+    .pixel { shape-rendering: crispEdges; }
+  </style>
+  
+  <!-- Background -->
+  <rect width="256" height="256" fill="#0a0e27"/>
+  
+  <!-- Head -->
+  <rect class="pixel" x="85" y="20" width="86" height="70" fill="#c0c0c0" stroke="#808080" stroke-width="2"/>
+  <!-- Left Eye (LED) -->
+  <rect class="pixel" x="110" y="40" width="16" height="16" fill="#ff0000"/>
+  <rect class="pixel" x="113" y="43" width="10" height="10" fill="#ff6b00"/>
+  <!-- Right Eye (LED) -->
+  <rect class="pixel" x="130" y="40" width="16" height="16" fill="#ff0000"/>
+  <rect class="pixel" x="133" y="43" width="10" height="10" fill="#ff6b00"/>
+  <!-- Antenna -->
+  <rect class="pixel" x="122" y="10" width="12" height="12" fill="#ffd700"/>
+  
+  <!-- Torso -->
+  <rect class="pixel" x="70" y="90" width="116" height="100" fill="#a9a9a9" stroke="#808080" stroke-width="2"/>
+  <!-- Chest Panel -->
+  <rect class="pixel" x="100" y="110" width="56" height="50" fill="#696969" stroke="#404040" stroke-width="2"/>
+  <!-- Lights on Panel -->
+  <rect class="pixel" x="110" y="120" width="6" height="6" fill="#00ff00"/>
+  <rect class="pixel" x="122" y="120" width="6" height="6" fill="#00ff00"/>
+  <rect class="pixel" x="134" y="120" width="6" height="6" fill="#00ff00"/>
+  <rect class="pixel" x="110" y="135" width="6" height="6" fill="#ffff00"/>
+  <rect class="pixel" x="134" y="135" width="6" height="6" fill="#ffff00"/>
+  
+  <!-- Arms -->
+  <rect class="pixel" x="25" y="120" width="45" height="50" fill="#a9a9a9" stroke="#808080" stroke-width="2"/>
+  <rect class="pixel" x="186" y="120" width="45" height="50" fill="#a9a9a9" stroke="#808080" stroke-width="2"/>
+  <!-- Hands -->
+  <rect class="pixel" x="15" y="165" width="20" height="20" fill="#696969"/>
+  <rect class="pixel" x="221" y="165" width="20" height="20" fill="#696969"/>
+  
+  <!-- Legs -->
+  <rect class="pixel" x="100" y="190" width="28" height="50" fill="#404040"/>
+  <rect class="pixel" x="128" y="190" width="28" height="50" fill="#404040"/>
+  <!-- Feet -->
+  <rect class="pixel" x="98" y="240" width="32" height="10" fill="#696969"/>
+  <rect class="pixel" x="126" y="240" width="32" height="10" fill="#696969"/>
+</svg>

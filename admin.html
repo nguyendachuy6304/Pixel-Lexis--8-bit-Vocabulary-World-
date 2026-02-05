@@ -2,177 +2,229 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Pixel Lexis - Admin Zone</title>
+    <title>Pixel Lexis - Admin Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* Giao diện riêng cho Admin */
-        .admin-container { max-width: 800px; margin: 0 auto; padding: 20px; border-color: #4caf50; }
+        .admin-container { max-width: 900px; margin: 0 auto; padding: 20px; border-color: #4caf50; }
         .form-group { margin-bottom: 20px; text-align: left; }
         label { display: block; color: #ffcc00; margin-bottom: 5px; font-size: 24px; }
-        select, input { 
-            width: 100%; padding: 10px; font-family: 'VT323'; font-size: 22px; 
-            background: #333; color: #fff; border: 2px solid #fff; box-sizing: border-box;
-        }
-        .question-list { border: 2px dashed #555; padding: 15px; margin-bottom: 20px; background: #222; min-height: 50px;}
-        .q-item { display: flex; gap: 10px; margin-bottom: 10px; }
+        select, input { width: 100%; padding: 10px; font-family: 'VT323'; font-size: 22px; background: #333; color: #fff; border: 2px solid #fff; box-sizing: border-box; }
         .game-header h1 { color: #4caf50; }
-        
-        /* Style thông báo lỗi */
-        #error-log { color: #ff5555; background: #220000; padding: 10px; display: none; border: 1px solid red; font-family: monospace; font-size: 16px; margin-bottom: 20px; white-space: pre-wrap; }
+        .manage-list { margin-top: 10px; max-height: 300px; overflow-y: auto; border: 2px solid #555; padding: 10px; background: #222; }
+        .list-item { display: flex; justify-content: space-between; align-items: center; background: #333; padding: 10px; margin-bottom: 5px; border: 1px solid #777; }
+        .list-item:hover { border-color: #fff; }
+        .q-item { border: 1px dashed #666; padding: 15px; margin-bottom: 15px; background: #2a2a2a; position: relative; }
+        .delete-q-btn { position: absolute; top: 5px; right: 5px; background: #d32f2f; border: 1px solid #fff; color: #fff; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="game-container admin-container">
         <header class="game-header">
-            <h1>ADMIN CONTROL</h1>
-            <p>Khu vực dành riêng cho Giáo Viên</p>
+            <h1>ADMIN CONTROL PRO</h1>
+            <p>Quản lý & Soạn thảo bài kiểm tra</p>
         </header>
 
-        <div id="error-log"></div>
+        <button class="pixel-btn secondary" id="btn-logout" style="background-color: #d32f2f; float: right;">ĐĂNG XUẤT</button>
+        <div style="clear: both;"></div>
+        <div id="error-log" style="color: red; display: none;"></div>
 
-        <div class="form-group">
-            <label>1. Chọn Vùng Đất (World):</label>
-            <select id="world-select">
+        <div class="form-group" style="border-bottom: 2px dashed #555; padding-bottom: 20px;">
+            <label>📂 QUẢN LÝ BÀI CŨ</label>
+            <select id="world-select-manage">
                 <option value="map_rung">🌲 Rừng Khởi Đầu</option>
                 <option value="map_city">🏙️ Thành Phố Code</option>
                 <option value="map_dungeon">💀 Hầm Ngục Tối</option>
             </select>
+            <button class="pixel-btn small" id="btn-load-list" style="margin-top: 10px;">TẢI DANH SÁCH BÀI</button>
+            <div id="level-list-container" class="manage-list"><p style="color: #aaa; text-align: center;">Chưa tải danh sách...</p></div>
         </div>
 
-        <div class="form-group">
-            <label>2. Thông tin Level:</label>
-            <div style="display: flex; gap: 10px;">
-                <input type="number" id="level-id" placeholder="ID (Ví dụ: 1)" style="width: 100px;">
-                <input type="text" id="level-name" placeholder="Tên màn (Ví dụ: Bìa Rừng)">
-            </div>
-            <div style="margin-top: 10px;">
-                <input type="checkbox" id="is-boss" style="width: 20px; height: 20px;"> 
-                <span style="font-size: 20px; color: #d32f2f; vertical-align: bottom;">Đây là màn BOSS?</span>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>3. Danh sách từ vựng:</label>
-            <div id="q-container" class="question-list">
-                </div>
-            <button class="pixel-btn secondary small" id="btn-add-line">+ Thêm từ mới</button>
-        </div>
-
-        <button class="pixel-btn" id="btn-save" style="background-color: #4caf50;">LƯU LÊN CLOUD ☁️</button>
-        <p id="status-msg" style="margin-top: 15px; font-size: 20px;"></p>
+        <h2 style="color: #4caf50; border-top: 2px solid #fff; padding-top: 20px;">📝 SOẠN THẢO BÀI HỌC</h2>
         
-        <br>
-        <button class="pixel-btn secondary" id="btn-logout" style="background-color: #d32f2f;">⬅ ĐĂNG XUẤT</button>
+        <div class="form-group">
+            <label>1. Thông tin Level:</label>
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <input type="number" id="level-id" placeholder="ID" style="width: 100px;">
+                <input type="text" id="level-name" placeholder="Tên bài học">
+            </div>
+            
+            <label style="font-size: 20px; color: #00e5ff;">Độ khó màn chơi (HP Quái):</label>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <input type="range" id="level-difficulty" min="1" max="10" value="1" oninput="document.getElementById('diff-val').innerText = this.value">
+                <span id="diff-val" style="font-size: 24px; color: #ffeb3b; font-weight: bold;">1</span>
+                <span style="color: #aaa;">(Level 1 = 100 HP, Level 10 = 1000 HP)</span>
+            </div>
+
+            <div style="margin-top: 10px;">
+                <input type="checkbox" id="is-boss" style="width: 20px;"> 
+                <span style="font-size: 20px; color: #d32f2f;">Là màn BOSS?</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>2. Danh sách câu hỏi:</label>
+            <div id="q-container" class="question-list"></div>
+            <div style="margin-top: 10px; display: flex; gap: 10px;">
+                <button class="pixel-btn secondary small" onclick="addQuestion('writing')">+ Viết</button>
+                <button class="pixel-btn secondary small" onclick="addQuestion('fill')">+ Điền từ</button>
+                <button class="pixel-btn secondary small" onclick="addQuestion('mc')">+ Trắc nghiệm</button>
+            </div>
+        </div>
+
+        <button class="pixel-btn" id="btn-save" style="background-color: #4caf50; width: 100%;">LƯU DỮ LIỆU ☁️</button>
+        <p id="status-msg" style="margin-top: 15px; font-size: 20px; text-align: center;"></p>
     </div>
 
-    <script>
-        function logError(msg) {
-            const errDiv = document.getElementById('error-log');
-            errDiv.style.display = 'block';
-            errDiv.innerText += "LỖI: " + msg + "\n";
+    <script type="module">
+        import { db, collection, doc, setDoc, getDocs, deleteDoc, auth, onAuthStateChanged, signOut } from './js/firebase-init.js';
+
+        onAuthStateChanged(auth, (user) => { if (!user) window.location.href = "login.html"; });
+        document.getElementById("btn-logout").addEventListener("click", () => signOut(auth).then(() => window.location.href = "login.html"));
+
+        // --- HÀM TẢI DANH SÁCH ---
+        document.getElementById("btn-load-list").addEventListener("click", async () => {
+            const worldId = document.getElementById("world-select-manage").value;
+            const container = document.getElementById("level-list-container");
+            container.innerHTML = "⏳ Đang tải...";
+            try {
+                const querySnapshot = await getDocs(collection(db, "worlds", worldId, "levels"));
+                const levels = [];
+                querySnapshot.forEach((doc) => levels.push(doc.data()));
+                levels.sort((a, b) => a.id - b.id);
+                container.innerHTML = "";
+                levels.forEach(level => {
+                    const diff = level.levelDifficulty || 1;
+                    const div = document.createElement("div");
+                    div.className = "list-item";
+                    div.innerHTML = `
+                        <div class="item-info">
+                            <span style="color: #ffcc00;">ID ${level.id}:</span> ${level.name} 
+                            <small style="color: #00e5ff;">(Lv.${diff})</small>
+                        </div>
+                        <div class="item-actions"><button class="pixel-btn small" id="edit-${level.id}">SỬA</button><button class="pixel-btn small" style="background:#d32f2f;" id="del-${level.id}">XÓA</button></div>
+                    `;
+                    container.appendChild(div);
+                    document.getElementById(`edit-${level.id}`).addEventListener("click", () => loadLevelToForm(level));
+                    document.getElementById(`del-${level.id}`).addEventListener("click", () => deleteLevel(worldId, level.id));
+                });
+            } catch (error) { container.innerText = "❌ Lỗi: " + error.message; }
+        });
+
+        async function deleteLevel(worldId, levelId) {
+            if(confirm(`Xóa Level ${levelId}?`)) {
+                await deleteDoc(doc(db, "worlds", worldId, "levels", levelId.toString()));
+                document.getElementById("btn-load-list").click();
+            }
         }
 
-        function addQuestionLine() {
+        function loadLevelToForm(level) {
+            document.getElementById("level-id").value = level.id;
+            document.getElementById("level-name").value = level.name;
+            document.getElementById("is-boss").checked = level.isBoss;
+            
+            // Load độ khó (Mặc định là 1 nếu bài cũ chưa có)
+            const diff = level.levelDifficulty || 1;
+            document.getElementById("level-difficulty").value = diff;
+            document.getElementById("diff-val").innerText = diff;
+
+            document.getElementById("q-container").innerHTML = "";
+            level.questions.forEach(q => {
+                addQuestion(q.type); 
+                const items = document.querySelectorAll(".q-item");
+                const lastItem = items[items.length - 1];
+                lastItem.querySelector(".inp-question").value = q.question;
+                lastItem.querySelector(".inp-correct").value = q.correct;
+                lastItem.querySelector(".inp-difficulty").value = q.difficulty || 1; 
+                if (q.type === 'mc') {
+                    lastItem.querySelector(".inp-opt-a").value = q.options[0];
+                    lastItem.querySelector(".inp-opt-b").value = q.options[1];
+                    lastItem.querySelector(".inp-opt-c").value = q.options[2];
+                    lastItem.querySelector(".inp-opt-d").value = q.options[3];
+                }
+            });
+            alert(`Đã tải bài "${level.name}".`);
+        }
+
+        window.addQuestion = function(type) {
+            const container = document.getElementById("q-container");
             const div = document.createElement("div");
             div.className = "q-item";
-            div.innerHTML = `
-                <input type="text" placeholder="Tiếng Anh (WORD)" class="inp-word">
-                <input type="text" placeholder="Tiếng Việt (MEANING)" class="inp-meaning">
-            `;
-            document.getElementById("q-container").appendChild(div);
-        }
+            
+            let html = `<button class="delete-q-btn" onclick="this.parentElement.remove()">X</button>`;
+            html += `<div style="display:flex; justify-content:space-between; margin-bottom: 5px;">
+                        <span style="color: #4caf50;">DẠNG: ${type.toUpperCase()}</span>
+                        <select class="inp-difficulty" style="width: 150px; font-size: 18px; padding: 2px;">
+                            <option value="1">⭐ Dễ</option>
+                            <option value="2">⭐⭐ Thường</option>
+                            <option value="3">⭐⭐⭐ Khó</option>
+                        </select>
+                        <input type="hidden" class="inp-type" value="${type}">
+                     </div>`;
+            html += `<input type="text" placeholder="Nhập câu hỏi..." class="inp-question" style="margin-bottom: 5px;">`;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                addQuestionLine(); addQuestionLine(); addQuestionLine();
-                document.getElementById("btn-add-line").addEventListener("click", addQuestionLine);
-            } catch (e) {
-                logError(e.message);
-            }
-        });
-    </script>
-
-    <script type="module">
-        // Import đầy đủ các công cụ cần thiết: DB và Auth
-        import { db, doc, setDoc, auth, signOut, onAuthStateChanged } from './js/firebase-init.js';
-
-        // 1. NGƯỜI GÁC CỔNG (Security Check)
-        // Kiểm tra ngay khi vào trang: Có phải giáo viên không?
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                console.log("Chào mừng Admin:", user.email);
+            if (type === 'mc') {
+                html += `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+                        <input type="text" placeholder="A" class="inp-opt-a"><input type="text" placeholder="B" class="inp-opt-b">
+                        <input type="text" placeholder="C" class="inp-opt-c"><input type="text" placeholder="D" class="inp-opt-d">
+                    </div>
+                    <input type="text" placeholder="Đáp án đúng (A/B/C/D)" class="inp-correct" style="margin-top: 5px; border-color: #4caf50;">`;
             } else {
-                // Nếu chưa đăng nhập -> Đẩy về trang Login ngay lập tức
-                alert("Bạn không có quyền truy cập! Vui lòng đăng nhập.");
-                window.location.href = "login.html";
+                html += `<input type="text" placeholder="Đáp án đúng" class="inp-correct" style="border-color: #4caf50;">`;
             }
-        });
+            div.innerHTML = html;
+            container.appendChild(div);
+        };
 
-        // 2. CHỨC NĂNG ĐĂNG XUẤT
-        document.getElementById("btn-logout").addEventListener("click", () => {
-            if(confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
-                signOut(auth).then(() => {
-                    window.location.href = "login.html";
-                }).catch((error) => {
-                    alert("Lỗi khi đăng xuất: " + error.message);
-                });
-            }
-        });
-
-        // 3. CHỨC NĂNG LƯU DỮ LIỆU (Save Logic)
+        // --- LƯU DỮ LIỆU ---
         document.getElementById("btn-save").addEventListener("click", async () => {
             const btn = document.getElementById("btn-save");
-            const msg = document.getElementById("status-msg");
-            
             btn.disabled = true;
-            btn.innerText = "ĐANG ĐẨY DỮ LIỆU...";
-            msg.innerText = "";
-
             try {
-                if (!db) throw new Error("Mất kết nối Firebase!");
-
-                const worldId = document.getElementById("world-select").value; 
-                const levelId = document.getElementById("level-id").value;     
-                const levelName = document.getElementById("level-name").value; 
+                const worldId = document.getElementById("world-select-manage").value; 
+                const levelId = document.getElementById("level-id").value;
+                const levelName = document.getElementById("level-name").value;
                 const isBoss = document.getElementById("is-boss").checked;
+                
+                // LẤY GIÁ TRỊ ĐỘ KHÓ LEVEL
+                const levelDifficulty = parseInt(document.getElementById("level-difficulty").value);
 
                 const questions = [];
                 document.querySelectorAll(".q-item").forEach(item => {
-                    const w = item.querySelector(".inp-word").value.trim();
-                    const m = item.querySelector(".inp-meaning").value.trim();
-                    if(w && m) questions.push({ word: w.toUpperCase(), meaning: m });
+                    const type = item.querySelector(".inp-type").value;
+                    const question = item.querySelector(".inp-question").value.trim();
+                    const correct = item.querySelector(".inp-correct").value.trim().toUpperCase();
+                    const difficulty = parseInt(item.querySelector(".inp-difficulty").value); 
+
+                    if(question && correct) {
+                        let qData = { type, question, correct, difficulty };
+                        if (type === 'mc') {
+                            qData.options = [
+                                item.querySelector(".inp-opt-a").value.trim(), item.querySelector(".inp-opt-b").value.trim(),
+                                item.querySelector(".inp-opt-c").value.trim(), item.querySelector(".inp-opt-d").value.trim()
+                            ];
+                        }
+                        questions.push(qData);
+                    }
                 });
 
-                if(!levelId || !levelName || questions.length === 0) {
-                    throw new Error("Vui lòng nhập ID, Tên màn và ít nhất 1 từ vựng!");
-                }
-
-                const docData = {
-                    id: parseInt(levelId),
-                    name: levelName,
-                    isBoss: isBoss,
-                    locked: parseInt(levelId) !== 1, 
-                    completed: false,
-                    questions: questions
-                };
-
-                // Lưu vào Firestore
-                await setDoc(doc(db, "worlds", worldId, "levels", levelId), docData);
-
-                msg.innerText = "✅ THÀNH CÔNG! Dữ liệu đã lên mây.";
-                msg.style.color = "#4caf50";
+                if(!levelId || questions.length === 0) throw new Error("Thiếu dữ liệu!");
                 
-            } catch (error) {
-                console.error(error);
-                msg.innerText = "❌ LỖI: " + error.message;
-                msg.style.color = "red";
-                document.getElementById('error-log').style.display = 'block';
-                document.getElementById('error-log').innerText = "Chi tiết lỗi: " + error.message;
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "LƯU LÊN CLOUD ☁️";
-            }
+                const docData = { 
+                    id: parseInt(levelId), 
+                    name: levelName, 
+                    isBoss: isBoss, 
+                    levelDifficulty: levelDifficulty, // Lưu thêm trường này
+                    locked: parseInt(levelId) !== 1, 
+                    completed: false, 
+                    questions: questions 
+                };
+                
+                await setDoc(doc(db, "worlds", worldId, "levels", levelId), docData);
+                document.getElementById("status-msg").innerText = "✅ ĐÃ LƯU!";
+                document.getElementById("btn-load-list").click();
+            } catch (error) { document.getElementById("status-msg").innerText = "❌ Lỗi: " + error.message; }
+            finally { btn.disabled = false; }
         });
     </script>
 </body>

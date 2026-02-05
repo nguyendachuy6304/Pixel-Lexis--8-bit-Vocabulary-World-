@@ -1,0 +1,46 @@
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- Skeleton Boss - 8-bit Pixel Art -->
+  <style>
+    .pixel { shape-rendering: crispEdges; }
+  </style>
+  
+  <!-- Background -->
+  <rect width="256" height="256" fill="#1a1a1a"/>
+  
+  <!-- Skull -->
+  <rect class="pixel" x="80" y="20" width="96" height="80" fill="#e0e0e0" stroke="#808080" stroke-width="2"/>
+  <!-- Left Eye Socket -->
+  <rect class="pixel" x="100" y="40" width="20" height="20" fill="#000"/>
+  <!-- Right Eye Socket -->
+  <rect class="pixel" x="136" y="40" width="20" height="20" fill="#000"/>
+  <!-- Nose Hole -->
+  <rect class="pixel" x="124" y="65" width="8" height="8" fill="#000"/>
+  <!-- Teeth -->
+  <rect class="pixel" x="90" y="75" width="8" height="12" fill="#000"/>
+  <rect class="pixel" x="104" y="75" width="8" height="12" fill="#000"/>
+  <rect class="pixel" x="118" y="75" width="8" height="12" fill="#000"/>
+  <rect class="pixel" x="132" y="75" width="8" height="12" fill="#000"/>
+  <rect class="pixel" x="146" y="75" width="8" height="12" fill="#000"/>
+  <rect class="pixel" x="160" y="75" width="8" height="12" fill="#000"/>
+  
+  <!-- Skeleton Ribcage -->
+  <rect class="pixel" x="85" y="105" width="86" height="70" fill="#d0d0d0" stroke="#808080" stroke-width="2"/>
+  <!-- Ribs -->
+  <line class="pixel" x1="85" y1="125" x2="171" y2="125" stroke="#808080" stroke-width="2"/>
+  <line class="pixel" x1="85" y1="145" x2="171" y2="145" stroke="#808080" stroke-width="2"/>
+  <line class="pixel" x1="85" y1="160" x2="171" y2="160" stroke="#808080" stroke-width="2"/>
+  
+  <!-- Arms (Bone) -->
+  <rect class="pixel" x="30" y="120" width="50" height="24" fill="#d0d0d0" stroke="#808080" stroke-width="2"/>
+  <rect class="pixel" x="176" y="120" width="50" height="24" fill="#d0d0d0" stroke="#808080" stroke-width="2"/>
+  <!-- Hands -->
+  <rect class="pixel" x="15" y="125" width="16" height="16" fill="#a0a0a0"/>
+  <rect class="pixel" x="225" y="125" width="16" height="16" fill="#a0a0a0"/>
+  
+  <!-- Pelvis -->
+  <rect class="pixel" x="100" y="175" width="56" height="30" fill="#d0d0d0" stroke="#808080" stroke-width="2"/>
+  
+  <!-- Legs -->
+  <rect class="pixel" x="105" y="205" width="16" height="45" fill="#c0c0c0"/>
+  <rect class="pixel" x="135" y="205" width="16" height="45" fill="#c0c0c0"/>
+</svg>

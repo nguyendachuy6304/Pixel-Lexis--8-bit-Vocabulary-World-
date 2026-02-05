@@ -1,0 +1,45 @@
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dragon Boss - 8-bit Pixel Art -->
+  <style>
+    .pixel { shape-rendering: crispEdges; }
+  </style>
+  
+  <!-- Background -->
+  <rect width="256" height="256" fill="#1a1a1a"/>
+  
+  <!-- Dragon Head -->
+  <rect class="pixel" x="100" y="30" width="56" height="56" fill="#d32f2f"/>
+  <!-- Dragon Snout -->
+  <rect class="pixel" x="150" y="50" width="40" height="36" fill="#c62828"/>
+  <!-- Eyes -->
+  <rect class="pixel" x="110" y="45" width="12" height="12" fill="#ffeb3b"/>
+  <rect class="pixel" x="154" y="50" width="12" height="12" fill="#ffeb3b"/>
+  <!-- Horns -->
+  <polygon class="pixel" points="115,25 110,5 120,25" fill="#ff6f00"/>
+  <polygon class="pixel" points="141,25 146,5 136,25" fill="#ff6f00"/>
+  
+  <!-- Dragon Neck -->
+  <rect class="pixel" x="105" y="85" width="46" height="30" fill="#e64a19"/>
+  
+  <!-- Dragon Body -->
+  <rect class="pixel" x="60" y="110" width="136" height="100" fill="#d32f2f"/>
+  <!-- Body Spikes -->
+  <polygon class="pixel" points="80,105 85,85 90,105" fill="#ff6f00"/>
+  <polygon class="pixel" points="120,105 125,85 130,105" fill="#ff6f00"/>
+  <polygon class="pixel" points="160,105 165,85 170,105" fill="#ff6f00"/>
+  
+  <!-- Front Legs -->
+  <rect class="pixel" x="70" y="205" width="24" height="45" fill="#b71c1c"/>
+  <rect class="pixel" x="162" y="205" width="24" height="45" fill="#b71c1c"/>
+  
+  <!-- Back Legs -->
+  <rect class="pixel" x="100" y="205" width="20" height="50" fill="#b71c1c"/>
+  <rect class="pixel" x="136" y="205" width="20" height="50" fill="#b71c1c"/>
+  
+  <!-- Tail -->
+  <path class="pixel" d="M 190 140 L 230 120 L 235 140" stroke="#ff6f00" stroke-width="8" fill="none"/>
+  
+  <!-- Wings -->
+  <polygon class="pixel" points="60,130 30,100 40,160" fill="#ff9800" opacity="0.8"/>
+  <polygon class="pixel" points="196,130 226,100 216,160" fill="#ff9800" opacity="0.8"/>
+</svg>

@@ -1,0 +1,24 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Demon Body -->
+  <polygon points="50,65 35,50 40,35 50,30 60,35 65,50" fill="#4a148c"/>
+  <!-- Demon Head -->
+  <circle cx="50" cy="30" r="12" fill="#6a1b9a"/>
+  <!-- Left Horn -->
+  <polygon points="42,15 38,5 40,20" fill="#b71c1c"/>
+  <!-- Right Horn -->
+  <polygon points="58,15 62,5 60,20" fill="#b71c1c"/>
+  <!-- Left Eye (Red) -->
+  <circle cx="45" cy="28" r="3" fill="#ff0000"/>
+  <!-- Right Eye (Red) -->
+  <circle cx="55" cy="28" r="3" fill="#ff0000"/>
+  <!-- Demon Mouth -->
+  <path d="M 48 35 Q 50 38 52 35" stroke="#000" fill="none" stroke-width="1"/>
+  <!-- Demon Wings -->
+  <polygon points="35,45 25,35 30,55" fill="#7b1fa2"/>
+  <polygon points="65,45 75,35 70,55" fill="#7b1fa2"/>
+  <!-- Demon Legs -->
+  <rect x="46" y="65" width="3" height="15" fill="#4a148c"/>
+  <rect x="51" y="65" width="3" height="15" fill="#4a148c"/>
+  <!-- Demon Tail -->
+  <path d="M 50 65 Q 60 70 65 75" stroke="#4a148c" stroke-width="3" fill="none"/>
+</svg>

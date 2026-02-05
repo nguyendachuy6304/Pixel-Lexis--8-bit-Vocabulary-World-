@@ -1,0 +1,28 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hero Head -->
+  <circle cx="50" cy="30" r="10" fill="#ffdbac"/>
+  <!-- Hero Hair -->
+  <path d="M 40 25 Q 50 15 60 25" fill="#8b4513"/>
+  <!-- Hero Eyes -->
+  <circle cx="46" cy="28" r="2" fill="#000"/>
+  <circle cx="54" cy="28" r="2" fill="#000"/>
+  <!-- Hero Mouth -->
+  <path d="M 48 33 Q 50 35 52 33" stroke="#000" fill="none" stroke-width="0.5"/>
+  <!-- Hero Body (Armor) -->
+  <rect x="42" y="42" width="16" height="18" fill="#c0c0c0" stroke="#808080" stroke-width="1"/>
+  <!-- Armor Detail -->
+  <line x1="42" y1="50" x2="58" y2="50" stroke="#808080" stroke-width="1"/>
+  <!-- Hero Arms -->
+  <rect x="30" y="45" width="5" height="15" fill="#ffdbac"/>
+  <rect x="65" y="45" width="5" height="15" fill="#ffdbac"/>
+  <!-- Hero Sword (Right Hand) -->
+  <rect x="68" y="40" width="3" height="20" fill="#ffd700" stroke="#d4af37" stroke-width="1"/>
+  <!-- Hero Shield (Left Hand) -->
+  <circle cx="28" cy="50" r="6" fill="#8b0000" stroke="#fff" stroke-width="1"/>
+  <!-- Hero Legs -->
+  <rect x="45" y="60" width="3" height="15" fill="#2c2c2c"/>
+  <rect x="52" y="60" width="3" height="15" fill="#2c2c2c"/>
+  <!-- Hero Boots -->
+  <rect x="44" y="74" width="5" height="3" fill="#000"/>
+  <rect x="51" y="74" width="5" height="3" fill="#000"/>
+</svg>

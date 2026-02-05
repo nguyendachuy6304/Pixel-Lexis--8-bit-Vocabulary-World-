@@ -1,10 +1,22 @@
 // --- js/firebase-init.js ---
 
-// 1. Import các hàm cần thiết từ Firebase (Dùng CDN phiên bản Web Modular)
+// 1. Import App
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// QUAN TRỌNG: Đã thêm 'createUserWithEmailAndPassword' vào dòng import bên dưới
+// 2. Import Firestore (Database)
+// LƯU Ý: Đã thêm 'deleteDoc' vào danh sách bên dưới
+import { 
+    getFirestore, 
+    collection, 
+    doc, 
+    setDoc, 
+    getDocs, 
+    getDoc, 
+    deleteDoc,
+    updateDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// 3. Import Authentication (Đăng nhập/Đăng ký)
 import { 
     getAuth, 
     signInWithEmailAndPassword, 
@@ -13,9 +25,10 @@ import {
     onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// 2. Cấu hình kết nối (Thông tin Project của bạn)
+// 4. Cấu hình kết nối
+// (Hãy đảm bảo apiKey này là Key MỚI nếu bạn đã đổi key ở bước bảo mật trước đó)
 const firebaseConfig = {
-    apiKey: "AIzaSyBEotuUiHCAnZXMLCqXWhHnqFdwSZnhYZo",
+    apiKey: "AIzaSyBEotuUiHCAnZXMLCqXWhHnqFdwSZnhYZo", 
     authDomain: "pixel-lexis.firebaseapp.com",
     projectId: "pixel-lexis",
     storageBucket: "pixel-lexis.firebasestorage.app",
@@ -23,14 +36,14 @@ const firebaseConfig = {
     appId: "1:586903726877:web:9349de9179140ee543cff4"
 };
 
-// 3. Khởi động Firebase
+// 5. Khởi động Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app); // Cơ sở dữ liệu
-const auth = getAuth(app);    // Hệ thống xác thực (Đăng nhập/Đăng ký)
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-console.log("🔥 Firebase (Auth + DB) đã sẵn sàng!");
+console.log("🔥 Firebase đã sẵn sàng (Đã bật chức năng Xóa)!");
 
-// 4. Xuất các hàm ra để các file khác (login.html, admin.html) sử dụng
+// 6. Xuất các hàm ra để dùng ở nơi khác
 export { 
     db, 
     auth, 
@@ -39,8 +52,10 @@ export {
     setDoc, 
     getDocs, 
     getDoc, 
+    deleteDoc,
+    updateDoc,
     signInWithEmailAndPassword, 
-    createUserWithEmailAndPassword, // <-- Hàm mới để đăng ký
+    createUserWithEmailAndPassword, 
     signOut, 
     onAuthStateChanged 
 };
