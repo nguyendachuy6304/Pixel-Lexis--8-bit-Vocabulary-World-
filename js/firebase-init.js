@@ -15,7 +15,7 @@ import {
 
 // 2. Cấu hình kết nối (Thông tin Project của bạn)
 const firebaseConfig = {
-    apiKey: "AIzaSyCMijcU214ZDrDvNPZHEOZD7Y9d4qGfprM",
+    apiKey: "AIzaSyBEotuUiHCAnZXMLCqXWhHnqFdwSZnhYZo",
     authDomain: "pixel-lexis.firebaseapp.com",
     projectId: "pixel-lexis",
     storageBucket: "pixel-lexis.firebasestorage.app",
